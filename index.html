@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ele-calc — Electronics Calculator</title>
+  <meta name="description" content="Ele-calc is an offline, fast, and ad-free electronics calculator app for professionals and hobbyists." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #1aad9f;
+      --primary-dark: #0d5c58;
+      --primary-light: #4cd6c9;
+      --bg: #0b1110;
+      --surface: #141f1e;
+      --text: #ffffff;
+      --muted: #8ba8a6;
+      --border: rgba(26, 173, 159, 0.2);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Background Glow */
+    .glow-bg {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(26, 173, 159, 0.15) 0%, rgba(11, 17, 16, 0) 70%);
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-mark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(26, 173, 159, 0.3);
+    }
+
+    .logo-mark svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary-light);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 5%;
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(26, 173, 159, 0.1);
+      border: 1px solid var(--border);
+      color: var(--primary-light);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+      background: linear-gradient(to right, #ffffff, #8ba8a6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    p.subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 48px;
+      animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+
+    .cta-container {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      animation: fadeInUp 0.8s ease-out 0.6s both;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #000000;
+      box-shadow: 0 4px 20px rgba(26, 173, 159, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(26, 173, 159, 0.6);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      width: 100%;
+      margin-top: 80px;
+      animation: fadeInUp 0.8s ease-out 0.8s both;
+    }
+
+    .feature-card {
+      background: rgba(20, 31, 30, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      padding: 32px;
+      border-radius: 20px;
+      text-align: left;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      background: rgba(20, 31, 30, 0.9);
+      border-color: rgba(26, 173, 159, 0.4);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(26, 173, 159, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    .feature-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    footer {
+      padding: 40px 5%;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: 40px;
+    }
+
+    footer p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-bg"></div>
+
+  <nav>
+    <div class="logo-container">
+      <div class="logo-mark">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="6" width="3" height="20" rx="1.5" fill="#000000"/>
+          <rect x="4" y="6" width="16" height="3" rx="1.5" fill="#000000"/>
+          <rect x="4" y="14.5" width="12" height="3" rx="1.5" fill="#000000"/>
+          <rect x="4" y="23" width="16" height="3" rx="1.5" fill="#000000"/>
+        </svg>
+      </div>
+      Ele-calc
+    </div>
+    <div class="nav-links">
+      <a href="privacy_policy.html">Privacy Policy</a>
+    </div>
+  </nav>
+
+  <main>
+    <span class="badge">Version 1.0.3 Now Available</span>
+    
+    <h1>The Ultimate<br>Electronics Calculator</h1>
+    
+    <p class="subtitle">
+      Powerful, offline, and completely ad-free. Everything you need to design, calculate, and verify electronics circuits right in your pocket.
+    </p>
+
+    <div class="cta-container">
+      <a href="#" class="btn btn-primary">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Download for Android
+      </a>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        </div>
+        <h3>Lightning Fast</h3>
+        <p>Built with Flutter for incredible performance. Instant calculations with zero lag, perfectly optimized for all devices.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle><line x1="3" y1="3" x2="21" y2="21"></line></svg>
+        </div>
+        <h3>100% Offline</h3>
+        <p>No internet connection required. Work on your circuits anywhere, anytime. No data is ever sent to our servers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
+        <h3>Privacy First</h3>
+        <p>We respect your data. Ele-calc collects absolutely no personal information and contains zero trackers.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      &copy; 2026 Ele-calc. All rights reserved. 
+      <a href="privacy_policy.html">Privacy Policy</a>
+      <a href="app-ads.txt">app-ads.txt</a>
+    </p>
+  </footer>
+
+</body>
+</html>
